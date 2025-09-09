@@ -68,5 +68,19 @@ main{max-width:var(--max); margin:0 auto; padding:0 var(--gap) 64px}
   grid-column: 2;
   color: var(--muted); /* 既存の本文色に合わせてOK。好みで変更可 */
 }
+/* About layout & avatar */
+.about-wrap{
+  display:grid;
+  grid-template-columns: 96px 1fr;
+  gap:16px;
+  align-items:start;
+}
+@media (max-width:560px){
+  .about-wrap{ grid-template-columns: 64px 1fr; }
+}
+.avatar{
+  width:96px; height:96px; border-radius:50%;
+  object-fit:cover; border:1px solid var(--line);
+}
 
 

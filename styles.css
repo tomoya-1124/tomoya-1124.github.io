@@ -46,11 +46,27 @@ main{max-width:var(--max); margin:0 auto; padding:0 var(--gap) 64px}
 .links li{margin:6px 0}
 .site-footer{max-width:var(--max); margin:0 auto; padding:24px var(--gap); border-top:1px solid var(--line); color:var(--muted); text-align:center}
 .note{color:var(--muted)}
-/* Projectカードのラベル強調 */
-.card .meta li strong{
-  display: inline-block;
-  min-width: 4em;
-  font-weight: 600;
-  color: #4FC3F7 !important; /* 水色で強調 */
+
+/* Projects のラベル/値を2列で揃える */
+.card .meta{
+  display: grid;
+  grid-template-columns: 4.5em 1fr; /* 左:ラベル 右:内容 */
+  row-gap: 6px;
+  column-gap: 12px;
+  list-style: none;
+  padding-left: 0;
+  margin: 10px 0 0;
 }
+.card .meta li{ display: contents; } /* liの箱は消して中身だけをグリッドに乗せる */
+.card .meta li strong{
+  grid-column: 1;
+  color: #4FC3F7;
+  font-weight: 600;
+  white-space: nowrap; /* 「役割」「技術」を折り返さない */
+}
+.card .meta li span{
+  grid-column: 2;
+  color: var(--muted); /* 既存の本文色に合わせてOK。好みで変更可 */
+}
+
 

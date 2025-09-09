@@ -3,105 +3,43 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>阿部 倫也 | Software Engineer</title>
-  <meta name="description" content="東京を拠点に活動するソフトウェアエンジニア。Java/Spring、Node.js、Oracle/PostgreSQL、Knockout.js。学びと実務の記録。">
-  <meta name="author" content="阿部 倫也">
-  <meta property="og:title" content="阿部 倫也 | Software Engineer">
-  <meta property="og:description" content="名刺代わりのシンプルなポートフォリオサイト。学びと実務の記録。">
-  <meta property="og:type" content="website">
-  <meta property="og:image" content="assets/og-img.png">
-  <link rel="icon" href="assets/favicon.ico">
-  <link rel="stylesheet" href="styles.css">
+  <title>Blog | Abe Tomoya</title>
+  <meta name="description" content="学びの記録や技術メモを残すブログ。">
+  <link rel="icon" href="../assets/favicon.ico">
+  <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
   <header class="site-header">
     <a class="brand" href="/">Abe <span class="accent">Tomoya</span></a>
     <nav id="nav" class="site-nav" aria-label="メイン">
-      <a href="#about">About</a>
-      <a href="#skills">Skills</a>
-      <a href="#projects">Projects</a>
+      <a href="/">Home</a>
+      <a href="/#skills">Skills</a>
+      <a href="/#projects">Projects</a>
       <a href="/blog/">Blog</a>
-      <a href="#contact">Contact</a>
     </nav>
     <button class="nav-toggle" aria-controls="nav" aria-expanded="false" onclick="toggleNav()">Menu</button>
   </header>
 
   <main>
-    <section class="hero">
-      <h1>Software Engineer</h1>
-      <p class="lead">Java / Spring Boot ・ Node.js ・ Knockout.js ・ SQL（Oracle / PostgreSQL）</p>
-      <p>“やっている自分を好きでいられること”。学びと実務の積み上げを記録していきます。</p>
-      <div class="cta">
-        <a class="btn" href="#projects">プロジェクトを見る</a>
-        <a class="btn ghost" href="/blog/">ブログを読む</a>
-      </div>
-    </section>
-
-    <section id="about" class="section">
-      <h2>About</h2>
-      <p>東京都在住のソフトウェアエンジニア。業務では Java / Spring Boot を中心に、フロントは Knockout.js、DB は Oracle / PostgreSQL を扱います。テスト設計、既存機能の改修、APIの新規実装などに取り組み中。</p>
-      <ul class="bullets">
-        <li>得意：要件の分解、境界値テストの設計、ログ調査</li>
-        <li>興味：スタイル最適化、CI/CD、ドメイン駆動設計</li>
-        <li>趣味：ファッション、音楽（ずとまよ等）、デザイン</li>
-      </ul>
-    </section>
-
-    <section id="skills" class="section">
-      <h2>Skills</h2>
-      <div class="chips">
-        <span>Java</span><span>Spring Boot</span><span>Node.js</span><span>Knockout.js</span>
-        <span>HTML</span><span>CSS</span><span>Oracle SQL</span><span>PostgreSQL</span>
-        <span>Git / GitLab</span><span>REST API</span><span>JUnit</span><span>JDBC</span>
-      </div>
-      <p class="note">※ このサイト自体は純粋な HTML/CSS/JS で構築。基礎力の鍛錬を目的としています。</p>
-    </section>
-
-    <section id="projects" class="section">
-      <h2>Projects</h2>
+    <section class="section">
+      <h1>Blog</h1>
+      <p class="note">軽量な静的ブログ。新規記事は <code>/posts/</code> に HTML で追加し、ここにリンクを足すだけ。</p>
       <div class="grid">
         <article class="card">
-          <h3>携帯譲渡 管理モジュール</h3>
-          <p>Spring Boot / Knockout.js。既存流用ベースに UI/CTRL を調整し、必要 API を新規実装。テーブル設計・単体試験仕様書も担当。</p>
+          <h3><a href="../posts/hello-world.html">Hello World（方針メモ）</a></h3>
+          <p>このサイトの目的と今後の改善計画。</p>
           <ul class="meta">
-            <li>役割: 実装・テスト</li>
-            <li>技術: Java, Spring, SQL</li>
-          </ul>
-        </article>
-        <article class="card">
-          <h3>テストケース自動生成スクリプト</h3>
-          <p>境界値・同値分割をカバーする CSV 入力→ケース出力ツール。社内の単体試験作成を高速化。</p>
-          <ul class="meta">
-            <li>役割: 設計・実装</li>
-            <li>技術: Node.js</li>
-          </ul>
-        </article>
-        <article class="card">
-          <h3>ポートフォリオサイト</h3>
-          <p>このサイト。アクセシビリティとレスポンシブ、軽量な構造を重視。</p>
-          <ul class="meta">
-            <li>役割: デザイン・実装</li>
-            <li>技術: HTML, CSS, JS</li>
+            <li>2025-09-09</li>
+            <li>HTML/CSS/JS</li>
           </ul>
         </article>
       </div>
-    </section>
-
-    <section id="contact" class="section">
-      <h2>Contact</h2>
-      <p>ご連絡は以下からどうぞ：</p>
-      <ul class="links">
-        <li><a href="mailto:tom.abe1124@icloud.com">tom.abe1124@icloud.com</a></li>
-        <li><!--<a href="https://x.com/" target="_blank" rel="noopener">X</a> / --><a href="https://www.instagram.com/r_of_the_moon/" target="_blank" rel="noopener">Instagram</a></li>
-        <li><a href="/blog/">Blog</a></li>
-      </ul>
     </section>
   </main>
 
   <footer class="site-footer">
-    <small>&copy; <span id="year">2025</span> Abe Tomoya. All rights reserved.</small>
+    <small>&copy; <span id="year"></span> Abe Tomoya. All rights reserved.</small>
   </footer>
-
-  <script src="script.js"></script>
+  <script src="../script.js"></script>
 </body>
 </html>

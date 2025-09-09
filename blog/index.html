@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Blog | Abe Tomoya</title>
+  <meta name="description" content="学びの記録や技術メモを残すブログ。">
+  <link rel="icon" href="../assets/favicon.ico">
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/">Abe <span class="accent">Tomoya</span></a>
+    <nav id="nav" class="site-nav" aria-label="メイン">
+      <a href="./">Home</a>
+      <a href="/#skills">Skills</a>
+      <a href="/#projects">Projects</a>
+      <a href="blog/">Blog</a>
+    </nav>
+    <button class="nav-toggle" aria-controls="nav" aria-expanded="false" onclick="toggleNav()">Menu</button>
+  </header>
+
+  <main>
+    <section class="section">
+      <h1>Blog</h1>
+      <p class="note">軽量な静的ブログ。新規記事は <code>/posts/</code> に HTML で追加し、ここにリンクを足すだけ。</p>
+      <div class="grid">
+        <article class="card">
+          <h3><a href="../posts/hello-world.html">Hello World（方針メモ）</a></h3>
+          <p>このサイトの目的と今後の改善計画。</p>
+          <ul class="meta">
+            <li>2025-09-09</li>
+            <li>HTML/CSS/JS</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <small>&copy; <span id="year"></span> Abe Tomoya. All rights reserved.</small>
+  </footer>
+  <script src="../script.js"></script>
+</body>
+</html>

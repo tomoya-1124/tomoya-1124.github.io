@@ -46,3 +46,9 @@ main{max-width:var(--max); margin:0 auto; padding:0 var(--gap) 64px}
 .links li{margin:6px 0}
 .site-footer{max-width:var(--max); margin:0 auto; padding:24px var(--gap); border-top:1px solid var(--line); color:var(--muted); text-align:center}
 .note{color:var(--muted)}
+ul.meta li strong {
+  display: inline-block;   /* ラベルを独立して見やすくする */
+  min-width: 4em;          /* 横幅をそろえる */
+  font-weight: 600;        /* 少し太字 */
+  color: #4FC3F7;          /* 水色系の強調色 */
+}

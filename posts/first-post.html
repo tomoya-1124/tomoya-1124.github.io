@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GitHub Pagesでポートフォリオ公開！詰まったところと学び | Abe Tomoya Blog</title>
+  <meta name="description" content="GitHub Pagesでポートフォリオを公開するまでにハマった箇所と解決方法の備忘録。ファイル構成、SSH認証、Push時のエラー対処など。"/>
+  <link rel="icon" href="../assets/favicon.ico"/>
+  <link rel="stylesheet" href="../styles.css"/>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="../">Abe <span class="accent">Tomoya</span></a>
+    <nav class="site-nav">
+      <a href="../">Home</a>
+      <a href="../#skills">Skills</a>
+      <a href="../#projects">Projects</a>
+      <a href="../blog/">Blog</a>
+      <a href="../#contact">Contact</a>
+    </nav>
+    <button class="nav-toggle" aria-controls="nav" aria-expanded="false" onclick="toggleNav()">Menu</button>
+  </header>
+
+  <main class="section">
+    <article>
+      <h1>GitHub Pagesでポートフォリオ公開！詰まったところと学び</h1>
+      <p class="note">投稿日: 2025-09-09 ｜ カテゴリ: Git/GitHub・HTML/CSS/JS</p>
+
+      <p>名刺代わりのポートフォリオを <strong>GitHub Pages</strong> で公開したときの備忘録です。無料で始められて学習にも最適ですが、最初は意外とハマりどころがありました。この記事では、自分が実際に詰まったポイントと解決方法、そして学びをまとめます。</p>
+
+      <h2>1. 環境と方針</h2>
+      <ul class="bullets">
+        <li>構成：<code>HTML/CSS/JS</code> のみ（学習のため最低限で）</li>
+        <li>公開：GitHub Pages（リポジトリ名 <code>tomoya-1124.github.io</code>）</li>
+        <li>目的：名刺代わり＋ブログの土台作り</li>
+      </ul>
+
+      <h2>2. 最初に詰まったところ</h2>
+      <h3>2.1 ルートの <code>index.html</code> 問題</h3>
+      <p>トップに表示されるのは <code>リポジトリ直下の index.html</code>。ブログ版を誤って置くと、トップが「Blogだけ」のページになってしまう。</p>
+      <pre><code>理想の構成:
+/
+├─ index.html        ← Home（About/Skills/Projects/Contact）
+├─ styles.css
+├─ script.js
+├─ assets/
+│   ├─ favicon.ico
+│   └─ og-image.png
+├─ blog/
+│   └─ index.html    ← ブログ一覧
+└─ posts/
+    └─ first-post.html ← 記事
+</code></pre>
+
+      <h3>2.2 Push 時の認証エラー</h3>
+      <p><code>git push</code> で「Invalid username or token」や「Permission denied (publickey)」に遭遇。HTTPS + PAT か SSH のどちらかで確実に通す必要。</p>
+
+      <h3>2.3 SSHキーの設定抜け</h3>
+      <p>鍵は作るだけでなく、<strong>GitHubのSSH Keysに公開鍵を登録</strong>し、<strong>ssh-agent に追加</strong>するのがポイント。</p>
+
+      <h2>3. 解決の手順（自分がやったこと）</h2>
+      <h3>3.1 フォルダ構成を整える</h3>
+      <pre><code class="language-bash"># クローンして中身を入れ替え
+git clone git@github.com:tomoya-1124/tomoya-1124.github.io.git
+cd tomoya-1124.github.io
+# （ローカルの正しい構成をコピー）
+# 例）cp -r ~/se-portfolio-starter/* .
+#     cp ~/se-portfolio-starter/.nojekyll .
+git add -A
+git commit -m "restore structure"
+git push origin main
+</code></pre>
+
+      <h3>3.2 SSH 認証（通った手順）</h3>
+      <pre><code class="language-bash"># 鍵作成（Enter連打でOK）
+ssh-keygen -t ed25519 -C "tom.abe1124@icloud.com"
+
+# エージェント起動＆鍵を登録
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519
+
+# 公開鍵を表示してGitHubに登録（Settings → SSH and GPG keys）
+cat ~/.ssh/id_ed25519.pub
+
+# リモートURLがSSHか確認＆変更
+git remote -v
+git remote set-url origin git@github.com:tomoya-1124/tomoya-1124.github.io.git
+
+# テスト
+ssh -T git@github.com   # Hi tomoya-1124! ... が出ればOK
+</code></pre>
+
+      <h3>3.3 GitHub Pages の設定</h3>
+      <ul class="bullets">
+        <li>Settings → Pages → Branch: <code>main</code> / フォルダ: <code>/(root)</code></li>
+        <li>OG画像は絶対URL推奨：<code>og:url</code> と <code>og:image</code> を公開URLで固定</li>
+      </ul>
+
+      <h2>4. 学んだこと</h2>
+      <ul class="bullets">
+        <li>トップは必ず <code>/index.html</code>。ブログは <code>/blog/</code> と <code>/posts/</code> に分離。</li>
+        <li>Push の詰まりは、認証方式（HTTPS+PAT or SSH）とリモートURLの整合で大体解消。</li>
+        <li>トラブル時は <code>git status</code> と <code>git remote -v</code>、そしてログ/エラーメッセージを素直に読む。</li>
+      </ul>
+
+      <h2>5. 次にやること</h2>
+      <ul class="bullets">
+        <li>Contact の文言やSNSリンクを整える</li>
+        <li>favicon と OG画像を自分のブランドに寄せる</li>
+        <li>技術メモを週1で追加（Knockout.jsのTIPS、境界値テストの具体例など）</li>
+      </ul>
+
+      <p><a href="../blog/">← ブログ一覧へ戻る</a></p>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <small>&copy; <span id="year"></span> Abe Tomoya. All rights reserved.</small>
+  </footer>
+
+  <script src="../script.js"></script>
+</body>
+</html>

@@ -1,4 +1,17 @@
-# Abe Tomoya Portfolio
+# SE Portfolio Starter (静的サイト)
+
+![GitHub last commit](https://img.shields.io/github/last-commit/tomoya-1124/tomoya-1124.github.io)
+![GitHub repo size](https://img.shields.io/github/repo-size/tomoya-1124/tomoya-1124.github.io)
+![GitHub stars](https://img.shields.io/github/stars/tomoya-1124/tomoya-1124.github.io?style=social)
+
+名刺代わりのシンプルなポートフォリオ＋最小ブログ。HTML/CSS/JSのみ。
+
+---
+
+## スクリーンショット
+![screenshot](assets/og-img2.png)
+
+---# Abe Tomoya Portfolio
 
 [![GitHub Pages](https://img.shields.io/badge/View%20Site-Portfolio-blue)](https://tomoya-1124.github.io/)
 

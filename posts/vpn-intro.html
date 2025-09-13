@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>開発環境でVPNを導入した理由と得られたこと | Abe Tomoya Blog</title>
+  <meta name="description" content="在宅や外部ネットワークから安全に開発環境へアクセスするためにVPNを導入。背景、選定、使って感じたメリット、課題、今後の改善をまとめました。"/>
+  <link rel="icon" href="../assets/favicon.ico"/>
+  <link rel="stylesheet" href="../styles.css"/>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="../">Abe <span class="accent">Tomoya</span></a>
+    <nav class="site-nav">
+      <a href="../">Home</a>
+      <a href="../#skills">Skills</a>
+      <a href="../#projects">Projects</a>
+      <a href="../blog/">Blog</a>
+      <a href="../#contact">Contact</a>
+    </nav>
+    <button class="nav-toggle" aria-controls="nav" aria-expanded="false" onclick="toggleNav()">Menu</button>
+  </header>
+
+  <main class="section">
+    <article>
+      <h1>開発環境でVPNを導入した理由と得られたこと</h1>
+      <p class="note">投稿日: 2025-09-14 ｜ カテゴリ: VPN / セキュリティ</p>
+
+      <p>在宅やカフェなど外部ネットワークから開発環境へアクセスする機会が増え、<strong>通信の安全性と運用の安定性</strong>を高めるためにVPN（Virtual Private Network）を導入しました。この記事では、導入の背景、選定のポイント、実際に感じたメリットと課題を簡潔にまとめます。</p>
+
+      <h2>なぜVPNが必要だったのか</h2>
+      <ul class="bullets">
+        <li><strong>安全なリモートアクセス:</strong> 公衆Wi-Fiでもトンネルで暗号化して盗聴リスクを低減</li>
+        <li><strong>アクセス制御の明確化:</strong> 許可された経路のみから開発環境へ接続</li>
+        <li><strong>運用の一元化:</strong> 接続先やルールを統一して管理コストを下げる</li>
+      </ul>
+
+      <h2>導入時に比較したこと</h2>
+      <p>外部の有料VPNサービスと自前VPN（例：WireGuard/OpenVPN）を比較。結果的に、今回は<strong>外部VPNサービス</strong>を採用しました。</p>
+      <ul class="bullets">
+        <li><strong>速度・安定性:</strong> 開発中のダウンロード/依存解決がストレスなく進むか</li>
+        <li><strong>運用負荷:</strong> サーバ保守・証明書管理を自前でやるか、サービスに委ねるか</li>
+        <li><strong>コスト:</strong> 月額と時間コストのバランス（学習/検証目的ならサービス利用で十分な場面が多い）</li>
+      </ul>
+
+      <h2>使ってみて感じたメリット</h2>
+      <ul class="bullets">
+        <li><strong>安心感:</strong> 常時暗号化により外出先でも心理的安全性が上がる</li>
+        <li><strong>接続の再現性:</strong> 固定の経路を使うことで「環境依存の不具合」を減らせた</li>
+        <li><strong>設定の共有が簡単:</strong> プロファイル配布で端末追加がスムーズ</li>
+      </ul>
+
+      <h2>課題と今後の改善</h2>
+      <ul class="bullets">
+        <li><strong>MFAの導入:</strong> 追加の多要素認証でさらに強固にしたい</li>
+        <li><strong>ログの可視化:</strong> 接続ログ・失敗ログのモニタリング強化</li>
+        <li><strong>コスト最適化:</strong> 長期契約や自前構築の検討（要メンテ工数見積）</li>
+      </ul>
+
+      <h2>まとめ</h2>
+      <p>VPN導入は、<strong>セキュリティ・運用・体験</strong>のバランスを上げるうえで効果的でした。まずはサービス利用で小さく始め、必要に応じて自前構築やMFA、ログ監査の強化に進むのが現実的だと感じています。</p>
+
+      <p><a href="../blog/">← ブログ一覧へ戻る</a></p>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <small>&copy; <span id="year"></span> Abe Tomoya. All rights reserved.</small>
+  </footer>
+
+  <script src="../script.js"></script>
+</body>
+</html>

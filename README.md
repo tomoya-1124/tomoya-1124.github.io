@@ -1,4 +1,4 @@
-# SE Portfolio Starter (静的サイト)
+# Abe Tomoya Portfolio（静的サイト）
 
 ![GitHub last commit](https://img.shields.io/github/last-commit/tomoya-1124/tomoya-1124.github.io)
 ![GitHub repo size](https://img.shields.io/github/repo-size/tomoya-1124/tomoya-1124.github.io)
@@ -10,13 +10,6 @@
 
 ## スクリーンショット
 ![screenshot](assets/og-img2.png)
-
----# Abe Tomoya Portfolio
-
-[![GitHub Pages](https://img.shields.io/badge/View%20Site-Portfolio-blue)](https://tomoya-1124.github.io/)
-
-このリポジトリは Abe Tomoya のポートフォリオサイトです。  
-**GitHub Pages** を利用して公開しています。
 
 ---
 
@@ -35,7 +28,7 @@
 
 ---
 
-## 📰 ブログ記事（例）
+## 📰 ブログ記事
 - [GitHub Pagesでポートフォリオ公開！詰まったところと学び](https://tomoya-1124.github.io/posts/first-post.html)
 - [SSH鍵とpushの詰まりを一気に解消するメモ](https://tomoya-1124.github.io/posts/ssh-troubleshoot.html)
 - [なぜポートフォリオにブログを足したのか](https://tomoya-1124.github.io/posts/why-add-blog.html)
@@ -57,3 +50,12 @@
 git clone git@github.com:tomoya-1124/tomoya-1124.github.io.git
 cd tomoya-1124.github.io
 open index.html   # またはブラウザで開く
+
+
+---
+
+## 更新履歴
+- 2025-09-09: 公開初日
+- 2025-09-10: ブログ記事1・2本目追加
+- 2025-09-11: Aboutセクション強化、README整備
+- 2025-09-14: VPN記事追加予定

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>新人エンジニアの実録：単体テストで見つけたズレと直し方 | Abe Tomoya Blog</title>
+  <meta name="description" content="現場で単体テスト仕様書を作り進める中でつまずいた点、工夫した進め方、画面・テーブルの突合、境界値の考え方などを実体験ベースで整理。"/>
+  <link rel="icon" href="../assets/favicon.ico"/>
+  <link rel="stylesheet" href="../styles.css"/>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="../">Abe <span class="accent">Tomoya</span></a>
+    <nav class="site-nav">
+      <a href="../">Home</a>
+      <a href="../#skills">Skills</a>
+      <a href="../#projects">Projects</a>
+      <a href="../blog/">Blog</a>
+      <a href="../#contact">Contact</a>
+    </nav>
+    <button class="nav-toggle" aria-controls="nav" aria-expanded="false" onclick="toggleNav()">Menu</button>
+  </header>
+
+  <main class="section">
+    <article>
+      <h1>新人エンジニアの実録：単体テストで見つけたズレと直し方</h1>
+      <p class="note">投稿日: 2025-09-14 ｜ カテゴリ: 単体テスト / 実務メモ</p>
+
+      <p>現場に入ってから、<strong>単体テスト仕様書の作成と実行</strong>を中心に進めてきました。やってみて分かったのは、仕様書どおりに手順を並べるだけでは十分ではなく、<strong>データ・UI・API・ログ</strong>を横断して見る視点が必要だということ。この記事では、つまずいたポイントと解決のコツ、再現性の高い進め方を、実際の現場感（画面・テーブルは仮称）でメモしておきます。</p>
+
+      <h2>1. 対象画面・テーブルのイメージ</h2>
+      <p>現在の案件では「◯◯関係者情報画面」や「〇〇マスタ登録画面」など複数画面を対象に単体テストを実施しています。  
+        データは <code>XXX_TBL</code>、<code>PIN_TBL</code> などの基幹テーブル（伏せ字）に保存されるため、テストケース設計の際は画面項目とテーブル項目を対応付けて確認しています。</p>
+
+      <h2>2. 境界値とデータ戦略</h2>
+      <ul class="bullets">
+        <li><strong>代表値：</strong>通常の社員番号（例：99999999999）</li>
+        <li><strong>境界値：</strong>11桁ぎりぎり/空欄/半角英字混入など</li>
+        <li><strong>相関値：</strong>営業担当者IDと部門コードの整合性（不一致ケースも試験）</li>
+      </ul>
+
+      <h2>3. UI・API・DBの突き合わせ</h2>
+      <p>「営業担当者情報画面（仮称）」では、画面で入力した値が <code>XXX_TBL</code> に正しく登録されるか、APIレスポンスが想定どおりかを確認しています。A5:SQLなどのツールを使い、登録直後のDB値と画面表示をクロスチェックすることで、仕様書上の期待値とのズレを早期に発見できました。</p>
+      <ul class="bullets">
+        <li><strong>DevTools</strong>（Networkタブ）でPOSTパラメータを確認</li>
+        <li><strong>SQL</strong>（A5:SQLなど）でテーブルの実データを確認</li>
+        <li><strong>ログ</strong>でバリデーション結果とメッセージIDを追う</li>
+      </ul>
+
+      <h2>4. ログ・エラーメッセージの見る順番</h2>
+      <ul class="bullets">
+        <li><strong>UIのエラーメッセージ</strong>（まず利用者視点で意味が通るか）</li>
+        <li><strong>サーバログ</strong>（スタックトレース/バリデーション結果）</li>
+        <li><strong>監査ログ</strong>（誰が/いつ/何を/結果は）</li>
+      </ul>
+      <p>ログは「時刻・リクエストID・ユーザーID」をキーに<strong>紐付けて並べる</strong>と因果が追いやすいです。</p>
+
+      <h2>5. チェックリストにして進捗を見える化</h2>
+      <p>画面仕様・テーブル仕様をExcelにまとめ、テスト実施時にチェックリストとして進捗管理をしています。<br>
+         「実行済/未実行/保留」を色分けするだけでも漏れが減り、レビューが楽になります。</p>
+
+      <h2>6. 学びと今後のステップ</h2>
+      <p>単体テストは「正しさの確認」だけでなく、<strong>実装の意図と仕様のズレを早期に見つける作業</strong>だと実感しました。<br>
+      今後は自動化ツールやユニットテストフレームワーク（JUnitなど）も活用しつつ、より再現性の高いテストを目指したいです。</p>
+
+      <p>
+        <a href="../posts/vpn-intro.html">← VPN導入メモ</a> |
+        <a href="../blog/">ブログ一覧へ</a>
+      </p>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <small>&copy; <span id="year"></span> Abe Tomoya. All rights reserved.</small>
+  </footer>
+
+  <script src="../script.js"></script>
+</body>
+</html>

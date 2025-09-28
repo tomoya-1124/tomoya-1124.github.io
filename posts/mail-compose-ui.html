@@ -1,93 +1,87 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>簡易メール送信画面を作る（DOM × アロー関数 × 条件分岐）</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>簡易メール送信画面を作る（DOM × アロー関数 × 条件分岐） | Abe Tomoya Blog</title>
+  <meta name="description" content="チェックON/OFF、複数アドレス、簡易バリデーション、送信確認までを素のHTML+JSで実装。DOM操作・アロー関数・条件分岐の基礎復習に最適な題材です。" />
+  <link rel="icon" href="../assets/favicon.ico" />
+  <link rel="stylesheet" href="../styles.css" />
 
-  <!-- 既存サイトのCSSを継承する想定。必要なら下のstyleを削除してOK 
-  <style>
-    .post { max-width: 880px; margin: 48px auto; padding: 0 20px; }
-    .post-title { margin: 0 0 4px; font-size: clamp(24px,3.2vw,36px); }
-    .post-meta { color: #888; margin-bottom: 20px; font-size: 0.95rem; }
-    .summary { border-left: 3px solid #38bdf8; padding: 12px 16px; background: #f7fbff; }
-    .toc { background: #fafafa; border: 1px solid #eee; padding: 12px 16px; margin: 20px 0; }
-    .card { border: 1px solid #eee; border-radius: 8px; padding: 16px; margin: 16px 0; }
-    pre { background:#0f172a; color:#e5e7eb; padding:14px; border-radius:8px; overflow:auto }
-    code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.95em; }
-  </style>
-  -->
-
-  <!-- OGP はお好みで差し替え -->
+  <!-- OGP（必要に応じて画像差し替え） -->
   <meta property="og:title" content="簡易メール送信画面を作る（DOM × アロー関数 × 条件分岐）" />
   <meta property="og:type" content="article" />
   <meta property="og:description" content="チェックON/OFF、複数アドレス、簡易バリデーション、送信確認までを素のHTML+JSで実装。" />
   <meta property="og:image" content="/assets/og/mail-compose.png" />
 </head>
 <body>
-<article class="post">
-  <header>
-    <h1 class="post-title">簡易メール送信画面を作る（DOM × アロー関数 × 条件分岐）</h1>
-    <div class="post-meta">
-      Posted: <time datetime="2025-09-25">2025-09-25</time> /
-      Tags: JavaScript, DOM, UI設計 /
-      Prev: <a href="/posts/unit-test-memo.html">単体テストメモ</a>
-    </div>
-    <div class="summary">
-      チェックボックスでメール機能のON/OFF、複数アドレスの追加、簡易バリデーション、送信確認までを
-      <strong>素のHTML+JS</strong>で実装。研修明け〜数ヶ月レベルで組める書き方に寄せました。
-    </div>
+  <!-- site header（前回記事と同じ構造） -->
+  <header class="site-header">
+    <a class="brand" href="../">Abe <span class="accent">Tomoya</span></a>
+    <nav class="site-nav" id="nav">
+      <a href="../">Home</a>
+      <a href="../#skills">Skills</a>
+      <a href="../#projects">Projects</a>
+      <a href=".././blog/">Blog</a>
+      <a href="../#contact">Contact</a>
+    </nav>
+    <button class="nav-toggle" aria-controls="nav" aria-expanded="false" onclick="toggleNav()">Menu</button>
   </header>
 
-  <nav class="toc">
-    <strong>目次</strong>
-    <ol>
-      <li><a href="#background">背景と狙い</a></li>
-      <li><a href="#ui">画面仕様（UI構成）</a></li>
-      <li><a href="#impl">実装ポイント（DOM/アロー関数/条件分岐）</a></li>
-      <li><a href="#code">コード（HTML / JS）</a></li>
-      <li><a href="#usage">使い方</a></li>
-      <li><a href="#future">今後の拡張</a></li>
-      <li><a href="#learn">学びメモ</a></li>
-    </ol>
-  </nav>
+  <main class="section">
+    <article>
+      <h1>簡易メール送信画面を作る（DOM × アロー関数 × 条件分岐）</h1>
+      <p class="note">
+        投稿日: <time datetime="2025-09-25">2025-09-25</time> |
+        カテゴリ: JavaScript / UI設計 |
+        Prev: <a href="/posts/unit-test-memo.html">単体テストメモ</a>
+      </p>
 
-  <section id="background">
-    <h2>背景と狙い</h2>
-    <p>
-      手書きスケッチから「完了メール送信」の簡易UIを立ち上げ、
-      <strong>DOM操作・イベント・条件分岐</strong>をコンパクトに復習できる題材としてまとめました。
-      フレームワークに頼らず、ブラウザ標準APIで実装可能な最小構成です。
-    </p>
-  </section>
+      <div class="summary">
+        チェックボックスでメール機能のON/OFF、複数アドレスの追加、簡易バリデーション、送信確認までを
+        <strong>素のHTML+JS</strong>で実装。研修明け〜数ヶ月レベルで再現できるコードにまとめました。
+      </div>
 
-  <section id="ui">
-    <h2>画面仕様（UI構成）</h2>
-    <div class="card">
+      <nav class="toc">
+        <strong>目次</strong>
+        <ol>
+          <li><a href="#background">背景と狙い</a></li>
+          <li><a href="#ui">画面仕様（UI構成）</a></li>
+          <li><a href="#impl">実装ポイント（DOM/アロー関数/条件分岐）</a></li>
+          <li><a href="#code">コード（HTML / JS）</a></li>
+          <li><a href="#usage">使い方</a></li>
+          <li><a href="#future">今後の拡張案</a></li>
+          <li><a href="#learn">学びメモ</a></li>
+        </ol>
+      </nav>
+
+      <h2 id="background">背景と狙い</h2>
+      <p>
+        手書きスケッチから「完了メール送信」の簡易UIを起こし、
+        <strong>DOM操作 / イベント処理 / 条件分岐</strong>の基礎を実務寄りに復習するのが目的。
+        フレームワークに依存せず、ブラウザ標準APIだけで最小構成を組み立てます。
+      </p>
+
+      <h2 id="ui">画面仕様（UI構成）</h2>
       <ul>
         <li>「メールを送信する」チェック（ONで設定ブロックが展開）</li>
-        <li>担当者（任意）／メールアドレス（複数追加可）</li>
+        <li>担当者（任意）・メールアドレス（複数追加可）</li>
         <li>本文コメント</li>
-        <li>送信ボタン（デモではアラート表示。実運用はAPI連携）</li>
+        <li>送信ボタン（本記事は確認ダイアログまで。実運用はAPI連携で送信）</li>
       </ul>
-    </div>
-  </section>
 
-  <section id="impl">
-    <h2>実装ポイント（DOM / アロー関数 / 条件分岐）</h2>
-    <div class="card">
-      <p><strong>DOM</strong>：<code>getElementById</code>/<code>createElement</code>/<code>appendChild</code> で要素取得・生成・追加。</p>
-      <p><strong>アロー関数</strong>：イベントのコールバックに使用（<code>this</code> に依存しないので簡潔）。</p>
-      <p><strong>条件分岐</strong>：三項演算子で表示切替、<code>if</code> 文で入力チェック分岐。</p>
-      <p><strong>イベントオブジェクト</strong>：<code>(e)</code> を受け取り <code>e.preventDefault()</code> で既定動作を抑止。</p>
-    </div>
-  </section>
+      <h2 id="impl">実装ポイント（DOM / アロー関数 / 条件分岐）</h2>
+      <ul>
+        <li><strong>DOM</strong>：<code>getElementById</code> で要素取得、<code>createElement</code>/<code>appendChild</code> で動的追加。</li>
+        <li><strong>アロー関数</strong>：イベントのコールバックに採用（<code>this</code>非依存で簡潔）。</li>
+        <li><strong>条件分岐</strong>：三項演算子で表示切替、<code>if</code> 文でバリデーション分岐。</li>
+        <li><strong>イベントオブジェクト</strong>：<code>(e)</code> を受け取り <code>e.preventDefault()</code> で既定のフォーム送信を抑止。</li>
+      </ul>
 
-  <section id="code">
-    <h2>コード（HTML / JS）</h2>
+      <h2 id="code">コード（HTML / JS）</h2>
 
-    <h3>HTML</h3>
-    <pre><code>&lt;div class="container"&gt;
+      <h3>HTML</h3>
+      <pre><code>&lt;div class="container"&gt;
   &lt;label&gt;&lt;input type="checkbox" id="enableEmail"&gt; メールを送信する&lt;/label&gt;
 
   &lt;div id="emailSettings" style="display:none"&gt;
@@ -109,8 +103,8 @@
   &lt;/div&gt;
 &lt;/div&gt;</code></pre>
 
-    <h3>JavaScript</h3>
-    <pre><code>document.addEventListener('DOMContentLoaded', () =&gt; {
+      <h3>JavaScript</h3>
+      <pre><code>document.addEventListener('DOMContentLoaded', () =&gt; {
   const enableCheckbox = document.getElementById('enableEmail');
   const emailSettings  = document.getElementById('emailSettings');
   const addEmailBtn    = document.getElementById('addEmail');
@@ -140,10 +134,15 @@
       .map(el =&gt; el.value.trim())
       .filter(v =&gt; v !== '');
 
-    if (emails.length === 0) { alert('少なくとも1つのメールアドレスを入力してください。'); return; }
+    if (emails.length === 0) {
+      alert('少なくとも1つのメールアドレスを入力してください。');
+      return;
+    }
     const invalid = emails.find(v =&gt; !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(v));
-    if (invalid) { alert('メールアドレスの形式が正しくありません: ' + invalid); return; }
-
+    if (invalid) {
+      alert('メールアドレスの形式が正しくありません: ' + invalid);
+      return;
+    }
     if (message === '' &amp;&amp; !confirm('本文が空です。送信しますか？')) return;
     if (responsible === '' &amp;&amp; !confirm('担当者が空です。送信しますか？')) return;
 
@@ -170,40 +169,41 @@
     }
   }
 });</code></pre>
-  </section>
 
-  <section id="usage">
-    <h2>使い方</h2>
-    <ol>
-      <li>チェックをONにすると設定領域が展開。</li>
-      <li>メールを1件以上入力。必要なら「+ アドレスを追加」。</li>
-      <li>本文・担当者は空でも送信可能（確認ダイアログで再確認）。</li>
-      <li>本デモは確認アラートまで。実運用は <code>fetch()</code> でAPI連携へ。</li>
-    </ol>
-  </section>
+      <h2 id="usage">使い方</h2>
+      <ol>
+        <li>チェックをONにすると設定領域が展開。</li>
+        <li>メールを1件以上入力。必要なら「+ アドレスを追加」。</li>
+        <li>本文・担当者は空でも送信可能（確認ダイアログで再確認）。</li>
+        <li>本デモは確認アラートまで。実運用は <code>fetch()</code> でAPI連携へ。</li>
+      </ol>
 
-  <section id="future">
-    <h2>今後の拡張</h2>
-    <ul>
-      <li>リアルタイムバリデーション（入力時に即時エラー表示）</li>
-      <li>アドレス行の削除ボタン、テンプレ保存、差し込み変数</li>
-      <li>送信中インジケータ／トースト、失敗時リトライ</li>
-    </ul>
-  </section>
+      <h2 id="future">今後の拡張案</h2>
+      <ul>
+        <li>リアルタイムバリデーション（入力時に即時エラー表示）</li>
+        <li>アドレス行の削除ボタン、テンプレ保存、差し込み変数</li>
+        <li>送信中インジケータ／トースト、失敗時リトライ</li>
+      </ul>
 
-  <section id="learn">
-    <h2>学びメモ</h2>
-    <ul>
-      <li>アロー関数は <code>this</code> を持たない。イベント記述が簡潔になる。</li>
-      <li>三項演算子は短いUI切替に便利。複雑化したら <code>if</code> 文へ分解。</li>
-      <li>HTMLCollectionは動的。<code>Array.from()</code> で配列化して安全に操作。</li>
-      <li><code>e.preventDefault()</code> でボタンの既定送信を抑止→自由な処理フローへ。</li>
-    </ul>
-  </section>
+      <h2 id="learn">学びメモ</h2>
+      <ul>
+        <li>アロー関数は <code>this</code> を持たないのでイベント記述が簡潔。</li>
+        <li>三項演算子は短いUI切替に便利。複雑なら素直に <code>if</code> 文。</li>
+        <li>HTMLCollectionは動的。<code>Array.from()</code> で配列化して安全に操作。</li>
+        <li><code>e.preventDefault()</code> で既定送信を抑止し、自由な処理フローに。</li>
+      </ul>
+    </article>
+  </main>
 
-  <footer class="post-meta">
-    © 2025 Tomoya Abe
-  </footer>
-</article>
+  <script>
+    // 既存サイトのナビ展開用ヘルパ（unit-test-memo.html と同等の想定）
+    function toggleNav() {
+      const nav = document.getElementById('nav');
+      const btn = document.querySelector('.nav-toggle');
+      const expanded = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!expanded));
+      nav.classList.toggle('open', !expanded);
+    }
+  </script>
 </body>
 </html>

@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ポートフォリオサイトにセキュリティ対策を実装してみた | Abe Tomoya</title>
+  <meta name="description" content="公開から1週間で静的サイトに導入した非機能対策（CSP / robots.txt / security.txt / PWA / 404）。実装方針と学びのメモ。">
+  <meta name="author" content="阿部 倫也">
+  <meta property="og:title" content="ポートフォリオサイトにセキュリティ対策を実装してみた">
+  <meta property="og:description" content="静的サイトでも取り入れられるセキュリティ＆信頼性の対策を概説。">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://tomoya-1124.github.io/assets/og-img2.png">
+  <link rel="icon" href="../assets/favicon.ico">
+  <link rel="stylesheet" href="../styles.css">
+
+  <!-- （参考）CSPのサンプル：実運用の値は本番HTMLでは非公開にする／report-onlyから始める
+  <meta http-equiv="Content-Security-Policy-Report-Only"
+        content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; report-to csp-endpoint">
+  -->
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="../">Abe <span class="accent">Tomoya</span></a>
+  <nav id="nav" class="site-nav" aria-label="メイン">
+    <a href="../#about">About</a>
+    <a href="../#skills">Skills</a>
+    <a href="../#projects">Projects</a>
+    <a href="../blog/">Blog</a>
+  </nav>
+  <button class="nav-toggle" aria-controls="nav" aria-expanded="false" onclick="toggleNav()">Menu</button>
+</header>
+
+<main class="section">
+  <h1>ポートフォリオサイトにセキュリティ対策を実装してみた</h1>
+  <p class="meta">
+    投稿日: <time datetime="2025-10-06">2025-10-06</time> ・ カテゴリ: セキュリティ / Web制作メモ
+  </p>
+
+  <p>
+    公開から約１ヶ月のタイミングで、<strong>非機能要件（セキュリティ・信頼性・パフォーマンス）</strong>に着手。<br>
+    ここでは、<em>静的サイトでも導入しやすい対策</em>に絞って、考え方と実装メモを残します。<br>
+    実際の値・細部は伏せており、<strong>概念・設置場所・進め方</strong>を中心に記載しています。
+  </p>
+
+  <h2>今回実装したもの（概要）</h2>
+  <ol>
+    <li><strong>Content Security Policy（CSP）</strong>：<em>Report-Only で検証 → 段階導入</em></li>
+    <li><strong>robots.txt / sitemap.xml</strong>：クローラ制御とサイトマップ公開</li>
+    <li><strong>security.txt</strong>：連絡先と運用方針の明示（<code>/.well-known/</code>）</li>
+    <li><strong>Service Worker</strong>：キャッシュ設計（PWA的にオフライン耐性を付与）</li>
+    <li><strong>404ページ</strong>：迷い込み対策・回遊導線（Home / Blog）</li>
+  </ol>
+
+  <h2>構成イメージ（概念図）</h2>
+  <p>非機能対策を反映したディレクトリの概念図。実際の値・細部は省略しています。</p>
+  <figure>
+    <img src="../assets/security-structure.png" alt="非機能対策を含むサイト構成の概念図" style="max-width:100%;height:auto">
+    <figcaption>構成イメージ（例）：<code>/</code> 配下に <code>index.html</code>・<code>styles.css</code>・<code>sw.js</code>・<code>sitemap.xml</code>、<code>/.well-known/</code> に <code>security.txt</code>、<code>/blog/</code> と <code>/posts/</code> は記事。</figcaption>
+  </figure>
+
+  <h2>各対策の進め方と要点（安全な範囲のサンプル付き）</h2>
+
+  <h3>1. CSP（Content Security Policy）</h3>
+  <ul class="bullets">
+    <li><strong>目的：</strong> 想定外のスクリプト実行や外部読み込みを抑制し、被害の波及を最小化。</li>
+    <li><strong>進め方：</strong> まずは <code>Report-Only</code> で適用 → コンソールやレポートを見て誤検知や漏れを潰す → 段階的に本適用。</li>
+    <li><strong>ヒント：</strong> 外部リンクは <code>rel="noopener noreferrer"</code>、<code>frame-ancestors 'none'</code> でクリックジャッキング対策など。</li>
+  </ul>
+  <details>
+    <summary>サンプル（安全化した参考）</summary>
+    <pre><code>&lt;!-- 実運用の値は公開しない。まずは Report-Only で検証 --&gt;
+&lt;meta http-equiv="Content-Security-Policy-Report-Only"
+      content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none';"&gt;</code></pre>
+  </details>
+
+  <h3>2. robots.txt / sitemap.xml</h3>
+  <ul class="bullets">
+    <li><strong>目的：</strong> 検索エンジンに対する巡回方針の提示と、サイト全体の構造を伝える。</li>
+    <li><strong>設置：</strong> ルート（<code>/robots.txt</code>、<code>/sitemap.xml</code>）。GitHub Pages ではリポジトリ直下。</li>
+  </ul>
+
+  <h3>3. security.txt（/.well-known/）</h3>
+  <ul class="bullets">
+    <li><strong>目的：</strong> 脆弱性報告の窓口や運用方針を統一フォーマットで公開。</li>
+    <li><strong>設置：</strong> <code>/.well-known/security.txt</code>（ルート直下に <code>.well-known</code> ディレクトリ）</li>
+    <li><strong>注意：</strong> 個人メール等は迷惑メール対策を考慮。期間やPreferred-Languagesのみ等、最小限公開も可。</li>
+  </ul>
+
+  <h3>4. Service Worker（キャッシュ設計）</h3>
+  <ul class="bullets">
+    <li><strong>目的：</strong> 表示速度・オフライン耐性の向上。攻撃面を広げないようスコープと挙動は最小に。</li>
+    <li><strong>設置：</strong> ルートに <code>/sw.js</code>。<code>index.html</code> で登録（既存の仕組みがあれば流用）。</li>
+    <li><strong>ヒント：</strong> バージョニング、<code>fetch</code> の許可先、失効戦略（stale-while-revalidate 等）を明示。</li>
+  </ul>
+
+  <h3>5. 404ページの整備</h3>
+  <ul class="bullets">
+    <li><strong>目的：</strong> 迷子になったユーザーの回遊性を高める（Home / Blogへの導線）。</li>
+    <li><strong>設置：</strong> ルートに <code>/404.html</code>。GitHub Pages は自動でルーティング。</li>
+  </ul>
+
+  <h2>やって良かったこと・学び</h2>
+  <ul class="bullets">
+    <li><strong>「まずは Report-Only」</strong>：壊さずに検証でき、段階導入の心理的障壁が低い。</li>
+    <li><strong>設置場所の標準化</strong>：<code>/.well-known/</code> やルート固定のファイルは、再現性・可搬性が高い。</li>
+    <li><strong>外部リンクのケア</strong>：<code>target="_blank"</code> には <code>rel="noopener noreferrer"</code> をセットで。</li>
+    <li><strong>最小公開の原則</strong>：具体値は出さず「方針・場所・進め方」を公開。実運用の値は非公開に。</li>
+  </ul>
+
+  <h2>まとめと今後</h2>
+  <p>
+    見た目や機能を大きく変えずに、<strong>「安全に動く・正しく公開する」</strong>を底上げできました。<br>
+    次は Lighthouse での計測やアクセシビリティ、フォーム導線の耐性（例：mailtoリンクの扱い）なども見直していきます。
+  </p>
+
+  <p class="note">※この記事では、実運用の設定値・メールアドレス等の機微情報は意図的に省略しています。</p>
+
+  <p>
+    <a href="./unit-test-memo.html">← 前の記事（単体テストの実録メモ）</a> |
+    <a href="../blog/">ブログ一覧へ</a>
+  </p>
+</main>
+
+<footer class="site-footer">
+  <small>&copy; <span id="year"></span> Abe Tomoya. All rights reserved.</small>
+</footer>
+
+<script src="../script.js"></script>
+</body>
+</html>

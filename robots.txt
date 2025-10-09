@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# 管理用や下書きがあればブロック（無ければ消してOK）
+Disallow: /draft/
+Disallow: /private/
+
+Sitemap: https://tomoya-1124.github.io/sitemap.xml

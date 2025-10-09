@@ -1,0 +1,4 @@
+Contact: mailto:tom.abe1124@icloud.com
+Preferred-Languages: ja, en
+Policy: https://tomoya-1124.github.io/
+Expires: 2026-10-01T00:00:00Z

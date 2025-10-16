@@ -84,3 +84,40 @@ main{max-width:var(--max); margin:0 auto; padding:0 var(--gap) 64px}
 }
 
 
+/* ログ追跡フローチャート */
+.log-flow-diagram {
+  text-align: center;
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 24px 0;
+  box-shadow: 0 0 8px rgba(0,0,0,0.05);
+}
+
+.flow-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.flow-item {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 12px 20px;
+  width: 120px;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.arrow {
+  font-size: 1.5rem;
+}
+
+.caption {
+  margin-top: 8px;
+  font-size: 0.85rem;
+  color: #666;
+}

@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ログから学ぶデバッグ術 | Abe Tomoya</title>
+  <meta name="description" content="現場で学んだ、ログを“読む力”の磨き方。SQLログ、サーバログ、ブラウザコンソールを組み合わせたデバッグ手法のメモ。">
+  <meta name="author" content="阿部 倫也">
+  <meta property="og:title" content="ログから学ぶデバッグ術">
+  <meta property="og:description" content="現場で学んだ、ログを“読む力”の磨き方。SQLログ、サーバログ、ブラウザコンソールを組み合わせたデバッグ手法のメモ。">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://tomoya-1124.github.io/assets/og-img2.png">
+  <link rel="icon" href="../assets/favicon.ico">
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="../">Abe <span class="accent">Tomoya</span></a>
+  <nav id="nav" class="site-nav" aria-label="メイン">
+    <a href="../#about">About</a>
+    <a href="../#skills">Skills</a>
+    <a href="../#projects">Projects</a>
+    <a href="../blog/">Blog</a>
+  </nav>
+  <button class="nav-toggle" aria-controls="nav" aria-expanded="false" onclick="toggleNav()">Menu</button>
+</header>
+
+<main class="section">
+  <h1>ログから学ぶデバッグ術</h1>
+  <p class="meta">
+    投稿日: <time datetime="2025-10-16">2025-10-16</time> ｜ カテゴリ: 実務メモ / デバッグ
+  </p>
+
+  <p>
+    コードレビューや試験中に「なぜこう動いた？」と立ち止まる瞬間がある。  
+    そんな時に頼りになるのが<strong>ログ</strong>。  
+    現場に入ってから、SQLログ・アプリログ・ブラウザコンソールを組み合わせることで、
+    <em>“エラーの先にある因果”</em>を追う重要性を痛感しました。
+  </p>
+
+  <h2>1. ログは「探す」より「つなげる」</h2>
+  <p>
+    初期は「ログを探す作業」だと思っていましたが、  
+    今は「ログをつなげてストーリーにする作業」だと感じています。  
+    <code>誰が（リクエスト）→ 何を（処理）→ どう返した（レスポンス）</code>の流れを意識すると、
+    単なる文字列の集まりが、“動作の記録”に変わります。
+  </p>
+
+  <h2>2. 使用ツールと役割分担</h2>
+  <ul>
+    <li><strong>A5:SQL Mk-2</strong> … DB更新・SELECT結果のトレース確認</li>
+    <li><strong>Eclipseコンソール</strong> … Controller・Service層のログ出力</li>
+    <li><strong>ブラウザのDevTools</strong> … JSエラー、XHR、レスポンスの確認</li>
+  </ul>
+  <div class="log-flow-diagram">
+    <h3>ログ追跡の流れ（概念図）</h3>
+    <div class="flow-container">
+      <div class="flow-item">🖥️<br>ブラウザ<br><small>DevTools / Console</small></div>
+      <div class="arrow">➡️</div>
+      <div class="flow-item">🌐<br>APIサーバ<br><small>Controller / Service</small></div>
+      <div class="arrow">➡️</div>
+      <div class="flow-item">🗄️<br>DB<br><small>A5:SQL / 実データ</small></div>
+    </div>
+    <p class="caption">UI操作 → API呼び出し → DB更新 の因果をログで追う</p>
+  </div>
+  
+  <p>
+    例えばAPI呼び出しで意図しない結果が返ってきたとき、  
+    <code>ブラウザ → APIログ → SQLログ</code> の順でたどると因果が明確になります。  
+    <em>「UIの値が間違い」ではなく「処理のどこで壊れたか」</em>にフォーカスできるのがポイント。
+  </p>
+
+  <h2>3. “静かなエラー”を見逃さない</h2>
+  <p>
+    明示的な例外（Exception）より厄介なのが、ログに残らない失敗。  
+    特に、<strong>条件分岐が意図せずスキップされたケース</strong>や、  
+    <strong>空値のまま登録処理が通ってしまうケース</strong>など。  
+    ログレベルを一時的に<code>DEBUG</code>に上げて実行パスを見比べると発見しやすいです。
+  </p>
+
+  <h2>4. データとログの“整合感”を取る</h2>
+  <p>
+    実テーブル（例：<code>〇〇_TBL</code>）を直接確認し、  
+    「この値が本当に登録されているか」をA5:SQLで追うのも重要。  
+    ログの出力とDBの実データが一致しているかを見ると、  
+    単体テストやUI検証では気づけないズレが見つかります。
+  </p>
+
+  <h2>5. ログ設計は“未来の自分”のために</h2>
+  <p>
+    デバッグは、結局「過去の自分との対話」。  
+    1ヶ月後に読み返しても理解できるログを出すことで、  
+    トラブル対応が圧倒的に早くなります。  
+    目指すのは、“わかるログ”ではなく、“思い出せるログ”。
+  </p>
+
+  <p>
+    <strong>出力例（抽象化済み）:</strong><br>
+    <code>[INFO] [CmnStaffNo=999999] update success / process=EntryCtrl / status=OK</code>
+  </p>
+
+  <h2>6. 学びと今後の改善</h2>
+  <ul>
+    <li>ログは「量」より「構造」。同じ形式で出すだけで追いやすくなる。</li>
+    <li>出力箇所をService層に寄せると責務が整理される。</li>
+    <li>不要な例外catchやprintStackTraceを削ることで、意味あるログだけ残す。</li>
+  </ul>
+
+  <p>
+    次は、<strong>ログフォーマットの統一</strong>と<strong>色分け表示ツールの導入</strong>（Log File Highlighterなど）を試していきたいです。
+  </p>
+
+  <p>
+    <a href="./unit-test-memo.html">← 単体テストで見つけたズレ</a> |
+    <a href="../blog/">ブログ一覧へ</a>
+  </p>
+</main>
+
+<footer class="site-footer">
+  <small>&copy; <span id="year"></span> Abe Tomoya. All rights reserved.</small>
+</footer>
+
+<script src="../script.js"></script>
+</body>
+</html>

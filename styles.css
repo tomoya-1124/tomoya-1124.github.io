@@ -120,4 +120,89 @@ main{max-width:var(--max); margin:0 auto; padding:0 var(--gap) 64px}
   margin-top: 8px;
   font-size: 0.85rem;
   color: #666;
+
+}/* ログ追跡フローチャート（改良版） */
+.log-flow-diagram {
+  text-align: center;
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 28px 16px;
+  margin: 28px 0;
+  box-shadow: 0 0 10px rgba(0,0,0,0.06);
+}
+
+.flow-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.flow-item {
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px 22px;
+  width: 140px;
+  font-size: 1rem; /* 文字を本文より少し大きめに */
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+.flow-item small {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.85rem;
+  color: #555;
+}
+
+.arrow {
+  font-size: 2rem; /* 矢印を大きく */
+}
+
+.caption {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid #ddd;
+  font-size: 0.9rem;
+  color: #666;
+}
+/* ===== flow アニメーション（矢印スライド＋点滅） ===== */
+.arrow {
+  font-size: 2rem;                 /* 矢印を大きく */
+  width: 2.4rem;                   /* 横幅を固定して揺れで隣を押し出さない */
+  text-align: center;
+  color: var(--accent, #2a9df4);   /* アクセント色（未定義なら水色系） */
+  opacity: 0.9;
+  animation:
+    arrow-move 1.6s ease-in-out infinite,
+    arrow-blink 1.6s steps(1, end) infinite;
+  will-change: transform, opacity; /* ちらつき防止＆省コスト */
+}
+
+/* 左→右にふわっと移動して戻る */
+@keyframes arrow-move {
+  0%   { transform: translateX(0); }
+  45%  { transform: translateX(8px); }
+  55%  { transform: translateX(8px); } /* 一瞬止めると“到達感”が出る */
+  100% { transform: translateX(0); }
+}
+
+/* 途中で明滅させて“流れ”を演出 */
+@keyframes arrow-blink {
+  0%, 60%, 100% { opacity: 0.9; }
+  30%           { opacity: 0.35; }
+}
+
+/* 連続する矢印に段階的ディレイ（任意） */
+.flow-container .arrow:nth-of-type(1) { animation-delay: 0s,    0s; }
+.flow-container .arrow:nth-of-type(2) { animation-delay: .2s,  .2s; }
+.flow-container .arrow:nth-of-type(3) { animation-delay: .4s,  .4s; }
+
+/* 利用者の“簡易表示”設定に配慮（macOS/iOS/Windows の設定を尊重） */
+@media (prefers-reduced-motion: reduce) {
+  .arrow {
+    animation: none !important;
+  }
 }
